@@ -29,7 +29,7 @@ class page4(ck.CTkFrame):
         self.table.configure(yscrollcommand=self.scrollbar.set)
         self.table.pack(fill=ck.BOTH, expand=False,padx=15)
 
-        self.delete_button = ck.CTkButton(self, text="Delete all Histroy", command=self.delete_item(self.table))
+        self.delete_button = ck.CTkButton(self, text="Delete All Histroy", command=self.delete_item(self.table))
         self.delete_button.place(x=410,y=600)
 
     def delete_item(self,tree):

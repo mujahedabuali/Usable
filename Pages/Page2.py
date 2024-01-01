@@ -17,7 +17,7 @@ class page2(ck.CTkFrame):
         self.label = ck.CTkLabel(self, text=" Choose what you want to filter:",corner_radius=40,height=50,font=("TkDefaultFont", 21, "underline")) 
         self.label.pack(pady=15)
         
-        checkbox1 = ck.CTkCheckBox(self,text=' Non Secure Site',font=("Times New Roman", 18)) 
+        checkbox1 = ck.CTkCheckBox(self,text=' Non-Secure Site',font=("Times New Roman", 18)) 
         checkbox1.pack(pady=30,padx=10) 
 
         checkbox2 = ck.CTkCheckBox(self,text='  Sensitive Photos',font=("Times New Roman", 18)) 

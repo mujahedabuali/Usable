@@ -24,7 +24,6 @@ class login_page(customtkinter.CTkFrame):
         checkbox = customtkinter.CTkCheckBox(self,text='Remember Me') 
         checkbox.pack(pady=30,padx=10) 
 
-
     def login(): 
 
         username = "1"

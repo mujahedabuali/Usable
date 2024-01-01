@@ -106,5 +106,5 @@ class page5(ck.CTkFrame):
          selected_item = self.table.focus()
          if selected_item:
             self.table.delete(selected_item)
-         else:  CTkMessagebox(title="Warning Message",message="Select a item Please",icon="warning",fade_in_duration=5)
+         else:  CTkMessagebox(title="Warning Message",message="Select a URL Please",icon="warning",fade_in_duration=5)
 

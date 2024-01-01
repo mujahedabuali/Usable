@@ -47,7 +47,7 @@ class Setting_Page(ck.CTkFrame):
         new_phone = self.phone_entry.get()
 
         if new_username and new_password and new_email and new_phone and new_password2 and (new_password2 == new_password):
-            CTkMessagebox(title="Success Message",message="Changes saved successfully!",icon="info",fade_in_duration=5)
+            CTkMessagebox(title="Success Message",message="Changes saved Successfully!",icon="info",fade_in_duration=5)
         else:
             CTkMessagebox(title="Error",message="Check all filed or Password not Similar",icon="cancel",fade_in_duration=5)
 
