@@ -1,12 +1,10 @@
 import customtkinter as customtkinter
 from PIL import Image
 
-
 class login_page(customtkinter.CTkFrame):
     def __init__(self, parent,login):
         super().__init__(parent, corner_radius=0, fg_color="transparent")
         
-
         self.logo_image = customtkinter.CTkImage(Image.open("imags/security.png"),size=(40,40))
         label = customtkinter.CTkLabel(self,text="Safe Web - Login  ",image=self.logo_image,compound="right",corner_radius=20,height=50,font=customtkinter.CTkFont(family="Times New Roman", size=25,weight="bold")) 
         label.pack(pady=60) 
@@ -46,3 +44,4 @@ class login_page(customtkinter.CTkFrame):
         #     tkmb.showwarning(title='Wrong username',message='Please check your username') 
         # else: 
         #     tkmb.showerror(title="Login Failed",message="Invalid Username and password") 
+

@@ -112,6 +112,9 @@ class App(customtkinter.CTk):
        self.navigation_frame.grid_forget()
        self.page2.grid_forget()
        self.page3.grid_forget()
+       self.page4.grid_forget()
+       self.page5.grid_forget()
+       self.sett_Page.grid_forget()
        self.loginPage.grid(row=0, column=1, sticky="nsew")
     
 

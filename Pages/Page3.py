@@ -15,12 +15,15 @@ class page3(ck.CTkFrame):
         self.label = ck.CTkLabel(self, text=" Book Mark",image=self.bookmark_image,corner_radius=20,compound="left",height=50,font=ck.CTkFont(family="Times New Roman", size=25,weight="bold")) 
         self.label.pack(pady=5)
         
-        columns = ('#1')
+        columns = ('#1',"#2")
         self.table = ttk.Treeview(self,columns=columns,height=15, selectmode='browse',show='headings')
 
         self.table.column("#1", anchor="w",width=100,minwidth=100)
+        self.table.column("#2", anchor="w",width=50,minwidth=50)
      
-        self.table.heading('#1', text='Item')
+        self.table.heading('#1', text='URL')
+        self.table.heading('#2', text='Name')
+
         self.table.bind('<Motion>','break')
 
         self.scrollbar = ck.CTkScrollbar(self, orientation=ck.VERTICAL, command=self.table.yview)
@@ -47,13 +50,16 @@ class page3(ck.CTkFrame):
 
     def add_window(self):
         def get():
-            if (self.entry.get()) :
+            if (self.entry.get() and self.entry2) :
                 data = self.entry.get()
-                self.table.insert('','end',values=(data))
+                data2 = self.entry2.get()
+
+                self.table.insert('','end',values=(data,data2))
                 self.entry.delete(0,'end')
+                self.entry2.delete(0,'end')
 
         new_window = ck.CTkToplevel(self)
-        new_window.geometry("400x200")
+        new_window.geometry("400x250")
         new_window.title('Add item')
 
 
@@ -67,6 +73,12 @@ class page3(ck.CTkFrame):
         self.entry = ck.CTkEntry(new_window,width=200)
         self.entry.pack(padx=10, pady=10)
 
+        entry_label2 = ck.CTkLabel(new_window,width=200,text="Enter Name:",font=ck.CTkFont(family="Times New Roman", size=18,weight="bold"))
+        entry_label2.pack(padx=10, pady=10)
+
+        self.entry2 = ck.CTkEntry(new_window,width=200)
+        self.entry2.pack(padx=10, pady=10)
+
         ok_button = ck.CTkButton(new_window, text="OK", command=get)
         ok_button.pack(padx=10, pady=10)
 
@@ -78,14 +90,16 @@ class page3(ck.CTkFrame):
 
     def edit_window(self):
         def get():
-            if (self.entry.get()) :
+            if (self.entry.get() and self.entry2.get()) :
                 item = self.table.focus()
                 data = self.entry.get()
-                self.table.item(item, values=data)
+                data2 = self.entry2.get()
+                self.table.item(item, values=(data,data2))
                 self.entry.delete(0,'end')
+                self.entry2.delete(0,'end')
 
         new_window = ck.CTkToplevel(self)
-        new_window.geometry("400x200")
+        new_window.geometry("400x250")
         new_window.title('Edit Book Mark')
 
 
@@ -98,6 +112,12 @@ class page3(ck.CTkFrame):
 
         self.entry = ck.CTkEntry(new_window,width=200)
         self.entry.pack(padx=10, pady=10)
+
+        entry_label2 = ck.CTkLabel(new_window,width=200,text="Enter New Name:",font=ck.CTkFont(family="Times New Roman", size=18,weight="bold"))
+        entry_label2.pack(padx=10, pady=10)
+
+        self.entry2 = ck.CTkEntry(new_window,width=200)
+        self.entry2.pack(padx=10, pady=10)
 
         ok_button = ck.CTkButton(new_window, text="OK", command=get)
         ok_button.pack(padx=10, pady=10)    
