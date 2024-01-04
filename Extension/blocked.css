@@ -1,0 +1,30 @@
+body {
+    background-color: #222222;
+    color: white;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+img {
+    display: block;
+    width: 15em;
+}
+
+.main-container {
+    display: block;
+    font-weight: bold;
+    font-size: .9rem;
+    text-align: center;
+}
+
+.site-url {
+    color: rgb(0, 60, 255);
+}
+
+p {
+    margin-top: 4em;
+    font-size: 1.3rem;
+}
