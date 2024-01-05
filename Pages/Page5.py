@@ -4,6 +4,7 @@ import customtkinter as ck
 from PIL import Image
 from tkinter import ttk
 from CTkMessagebox import CTkMessagebox
+from db import mycursor,mydb
 
 
 class page5(ck.CTkFrame):
@@ -20,7 +21,7 @@ class page5(ck.CTkFrame):
 
         self.table.column("#1", anchor="w",width=100,minwidth=100)
      
-        self.table.heading('#1', text='URL')
+        self.table.heading('#1', text='Item')
         self.table.bind('<Motion>','break')
 
         self.scrollbar = ck.CTkScrollbar(self, orientation=ck.VERTICAL, command=self.table.yview)
@@ -41,16 +42,30 @@ class page5(ck.CTkFrame):
 
         self.delete_button = ck.CTkButton(button_frame, text="Delete a Block Site", command=self.delete_item)
         self.delete_button.place(x=600,y=100)
+        mycursor.execute("SELECT url FROM site")
+        mysite = mycursor.fetchall()
+        for site in mysite:
+            self.table.insert('','end',values=(site))
+
 
     def add_data(self):
         self.add_window()
 
     def add_window(self):
+
         def get():
+            mycursor.execute("SELECT url FROM site")
+            mysite = mycursor.fetchall()
             if (self.entry.get()) :
                 data = self.entry.get()
-                self.table.insert('','end',values=(data))
-                self.entry.delete(0,'end')
+                if (data,) in mysite:
+                    CTkMessagebox(title="Warning Message",message="This Url is already blocked",icon="warning",fade_in_duration=5)
+                else:
+                    sql = "INSERT INTO site (url) VALUES (%s)"
+                    mycursor.execute(sql, (data,))
+                    mydb.commit()    
+                    self.table.insert('','end',values=(data))
+                    self.entry.delete(0,'end')
 
         new_window = ck.CTkToplevel(self)
         new_window.geometry("400x200")
@@ -70,6 +85,7 @@ class page5(ck.CTkFrame):
         ok_button = ck.CTkButton(new_window, text="OK", command=get)
         ok_button.pack(padx=10, pady=10)
 
+
     def edit_item(self):
          selected_item = self.table.focus()
          if selected_item:
@@ -79,10 +95,22 @@ class page5(ck.CTkFrame):
     def edit_window(self):
         def get():
             if (self.entry.get()) :
-                item = self.table.focus()
-                data = self.entry.get()
-                self.table.item(item, values=data)
-                self.entry.delete(0,'end')
+                mycursor.execute("SELECT url FROM site")
+                mysite = mycursor.fetchall()
+                if (self.entry.get()) :
+                    data = self.entry.get()
+                    if (data,) in mysite:
+                        CTkMessagebox(title="Warning Message",message="This Url is already blocked",icon="warning",fade_in_duration=5)
+                    else:
+                        item = self.table.focus()
+                        values = self.table.item(item, "values")
+                        oldurl = values[0]
+                        data = self.entry.get()
+                        sql = "UPDATE site SET url = %s WHERE url = %s"
+                        mycursor.execute(sql, (data, oldurl))
+                        mydb.commit() 
+                        self.table.item(item, values=data)
+                        self.entry.delete(0,'end')
 
         new_window = ck.CTkToplevel(self)
         new_window.geometry("400x200")
@@ -105,6 +133,11 @@ class page5(ck.CTkFrame):
     def delete_item(self):
          selected_item = self.table.focus()
          if selected_item:
+            values = self.table.item(selected_item, "values")
+            oldurl = values[0]
+            sql = "DELETE FROM  site  WHERE url = %s"
+            mycursor.execute(sql, (oldurl,))
+            mydb.commit() 
             self.table.delete(selected_item)
-         else:  CTkMessagebox(title="Warning Message",message="Select a URL Please",icon="warning",fade_in_duration=5)
+         else:  CTkMessagebox(title="Warning Message",message="Select a item Please",icon="warning",fade_in_duration=5)
 
