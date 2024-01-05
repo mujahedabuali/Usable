@@ -2,11 +2,57 @@
 #for make a Web filter page
 import customtkinter as ck
 from PIL import Image
-
+from db import mycursor,mydb
 
 
 class page2(ck.CTkFrame):
+    def toggle_checkbox(self,checkbox_number):
+        current_state = self.checkbox_vars[checkbox_number].get()
+        self.checkbox_vars[checkbox_number].set( current_state)
+        if checkbox_number==0:
+            if(current_state):
+                sql = "INSERT INTO content (name) VALUES ('Social Networking');"
+                mycursor.execute(sql)
+            else:
+                sql = "DELETE FROM content WHERE name = 'Social Networking'"
+                mycursor.execute(sql)
+        elif checkbox_number==2:
+            if(current_state):
+                sql = "INSERT INTO content (name) VALUES ('Adult and Pornography');"
+                mycursor.execute(sql)
+            else:
+                sql = "DELETE FROM content WHERE name = 'Adult and Pornography'"
+                mycursor.execute(sql)
+        elif checkbox_number==1:
+            if(current_state):
+                sql = "INSERT INTO content (name) VALUES ('Streaming Media');"
+                mycursor.execute(sql)
+            else:
+                sql = "DELETE FROM content WHERE name = 'Streaming Media'"
+                mycursor.execute(sql)
+        elif checkbox_number==3:
+            if(current_state):
+                sql = "INSERT INTO content (name) VALUES ('Games');"
+                mycursor.execute(sql)
+            else:
+                sql = "DELETE FROM content WHERE name = 'Games'"
+                mycursor.execute(sql)
+        mydb.commit()    
+
     def __init__(self, parent):
+        mycursor.execute("SELECT name FROM content")
+        mycontent = mycursor.fetchall()
+        self.checkbox_vars = [ck.BooleanVar() for _ in range(5)]
+        for x in mycontent:
+            if x==('Social Networking',):
+                self.checkbox_vars[0]=ck.BooleanVar(value=True)
+            elif x==('Adult and Pornography',):
+                self.checkbox_vars[2]=ck.BooleanVar(value=True)
+            elif x==('Games',):
+                self.checkbox_vars[3]=ck.BooleanVar(value=True)
+            elif x==('Streaming Media',):
+                self.checkbox_vars[1]=ck.BooleanVar(value=True)
+
         super().__init__(parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=10)
 
@@ -16,21 +62,16 @@ class page2(ck.CTkFrame):
 
         self.label = ck.CTkLabel(self, text=" Choose what you want to filter:",corner_radius=40,height=50,font=("TkDefaultFont", 21, "underline")) 
         self.label.pack(pady=15)
-        
-        checkbox1 = ck.CTkCheckBox(self,text=' Non-Secure Site',font=("Times New Roman", 18)) 
+
+        checkbox1 = ck.CTkCheckBox(self,text=' Social Media',variable=self.checkbox_vars[0], command=lambda:self.toggle_checkbox(0),font=("Times New Roman", 18)) 
         checkbox1.pack(pady=30,padx=10) 
 
-        checkbox2 = ck.CTkCheckBox(self,text='  Sensitive Photos',font=("Times New Roman", 18)) 
+        checkbox2 = ck.CTkCheckBox(self,text='    Movies',variable=self.checkbox_vars[1], command=lambda:(self.toggle_checkbox(1)),font=("Times New Roman", 18)) 
         checkbox2.pack(pady=30,padx=10) 
 
-        checkbox3 = ck.CTkCheckBox(self,text='   Untruted links',font=("Times New Roman", 18)) 
+        checkbox3 = ck.CTkCheckBox(self,text='    Site +18',variable=self.checkbox_vars[2], command=lambda:(self.toggle_checkbox(2)),font=("Times New Roman", 18)) 
         checkbox3.pack(pady=30,padx=10) 
 
-        checkbox4 = ck.CTkCheckBox(self,text='    Site +18',font=("Times New Roman", 18)) 
+        checkbox4 = ck.CTkCheckBox(self,text='    Games',variable=self.checkbox_vars[3], command=lambda:(self.toggle_checkbox(3)),font=("Times New Roman", 18)) 
         checkbox4.pack(pady=30,padx=10) 
 
-        checkbox5 = ck.CTkCheckBox(self,text='    Games',font=("Times New Roman", 18)) 
-        checkbox5.pack(pady=30,padx=10) 
-
-        checkbox6 = ck.CTkCheckBox(self,text='    Movies',font=("Times New Roman", 18)) 
-        checkbox6.pack(pady=30,padx=10) 
