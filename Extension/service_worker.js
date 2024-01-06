@@ -1,5 +1,5 @@
 const apiKey = 'AIzaSyD_sBfydgE1kbg5y1xAPKJFRXZB8hH4fQc' // this is the api key for google safe browsing api
-
+const backendURL = 'http://localhost:8000/add_blocked_site'
 
 
 // this method is going to run when the user visits any website (the code will run before the website is fully visited)
@@ -46,9 +46,31 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
             // if the response is not empty, it means that the website has something we are looking for and the details will be presented in the response.
             let matches = data.matches || [];
             if (matches.length > 0) {
-                console.log(matches[0].threatType)
-                let redirectURL = chrome.runtime.getURL(`blocked.html?data=${encodeURIComponent(url)}&cause=${encodeURIComponent(matches[0].threatType.replace('_', ' '))}`)
+                let cause
+                if (matches[0].threatType == 'SOCIAL_ENGINEERING') {
+                    cause = 'Phishing website (Some one is trying to steel your information)'
+                } else if (matches[0].threatType == 'POTENTIALLY_HARMFUL_APPLICATION') {
+                    cause = 'HARMFUL APPLICATION'
+                } else {
+                    cause = matches[0].threatType.replace('_', ' ')
+                }
+                // send the url to the backend
+                fetch(backendURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                })
+                    .then(response => {
+                        console.log('request sent successfully')
+                    })
+                    .catch(error => {
+                        console.error('Error:', error)
+                    })
+                let redirectURL = chrome.runtime.getURL(`blocked.html?data=${encodeURIComponent(url)}&cause=${encodeURIComponent(cause)}`)
                 chrome.tabs.update(tabId, { url: redirectURL })
+
             }
         })
         .catch(error => {
