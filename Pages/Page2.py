@@ -6,6 +6,7 @@ from db import mycursor,mydb
 
 
 class page2(ck.CTkFrame):
+    
     def toggle_checkbox(self,checkbox_number):
         current_state = self.checkbox_vars[checkbox_number].get()
         self.checkbox_vars[checkbox_number].set( current_state)

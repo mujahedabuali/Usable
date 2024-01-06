@@ -33,6 +33,9 @@ class Setting_Page(ck.CTkFrame):
         self.password_entry2.place(x=490,y=280)
         self.email_entry.place(x=490,y=360)
         self.phone_entry.place(x=490,y=440)
+
+        checkbox1 = ck.CTkCheckBox(self,text=' Real-Time Bloking',font=("Times New Roman", 18)) 
+        checkbox1.place(x=400,y=600)
         
          # Save button
         save_button = ck.CTkButton(self, text="Save Changes", command=self.save_changes)

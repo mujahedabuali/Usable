@@ -19,10 +19,16 @@ class page5(ck.CTkFrame):
         columns = ('#1')
         self.table = ttk.Treeview(self,columns=columns,height=15, selectmode='browse',show='headings')
 
-        self.table.column("#1", anchor="w",width=100,minwidth=100)
+        self.table.column("#1", anchor="w",width=200,minwidth=200)
      
-        self.table.heading('#1', text='Item')
+        self.table.heading('#1', text='URL')
         self.table.bind('<Motion>','break')
+
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=25, fieldbackground="Black")
+        style.map("Treeview", background=[('selected', '#347083')])
+        style.configure("Treeview", highlightthickness=0, bd=0)
+
 
         self.scrollbar = ck.CTkScrollbar(self, orientation=ck.VERTICAL, command=self.table.yview)
         self.scrollbar.pack(side=ck.RIGHT, fill=ck.Y)

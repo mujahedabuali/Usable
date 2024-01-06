@@ -18,12 +18,17 @@ class page3(ck.CTkFrame):
         self.table = ttk.Treeview(self,columns=columns,height=15, selectmode='browse',show='headings')
 
         self.table.column("#1", anchor="w",width=100,minwidth=100)
-        self.table.column("#2", anchor="w",width=50,minwidth=50)
+        self.table.column("#2", anchor="w",width=30,minwidth=30)
      
         self.table.heading('#1', text='URL')
         self.table.heading('#2', text='Name')
 
         self.table.bind('<Motion>','break')
+
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=25, fieldbackground="Black")
+        style.map("Treeview", background=[('selected', '#347083')])
+        style.configure("Treeview", highlightthickness=0, bd=0)
 
         self.scrollbar = ck.CTkScrollbar(self, orientation=ck.VERTICAL, command=self.table.yview)
         self.scrollbar.pack(side=ck.RIGHT, fill=ck.Y)
@@ -43,6 +48,7 @@ class page3(ck.CTkFrame):
 
         self.delete_button = ck.CTkButton(button_frame, text="Delete a Book Mark", command=self.delete_item)
         self.delete_button.place(x=600,y=100)
+
         mycursor.execute("SELECT url , name FROM bookmark")
         mybookmark = mycursor.fetchall()
         for bookmark in mybookmark:
