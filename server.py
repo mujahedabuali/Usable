@@ -7,13 +7,19 @@ import mysql.connector
 
 class SimpleRequestHandler(BaseHTTPRequestHandler):
 
-    # This route is going to accept a POST request on /add_blocked_site with url in the request body and add the url to the site table in the database
+
+    def _set_response(self, status_code=200, content_type="text/json"):
+        self.send_response(status_code)
+        self.send_header("Content-type", content_type)
+        self.end_headers()
+
     def do_POST(self):
-        if self.path == '/add_blocked_site':
+        if self.path == '/add_bookmark':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
             data = json.loads(post_data)
             url = data["url"]
+            name = data["name"]
 
             # Connect to the database
             db = mysql.connector.connect(
@@ -24,28 +30,15 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
 
             mycursor = db.cursor()
 
-            sql = "INSERT INTO site (url) VALUES (%s)"
-            val = (url,)
+            sql = "INSERT INTO bookmark (name, url) VALUES (%s, %s)"
+            val = (name, url)
+    
             mycursor.execute(sql, val)
             db.commit()
 
-            # Response
             self._set_response()
-            self.wfile.write(json.dumps({"status": "Success", "message": "URL added to 'site' table"}).encode("utf-8"))
+            self.wfile.write(json.dumps({"status": "Success", "message": "Bookmark added successfully"}).encode("utf-8"))
 
-            self._set_response()
-            self.wfile.write(json.dumps({"message": "Blocked site added successfully" + data["url"]}).encode("utf-8"))
-            return
-        else:
-            # Other requests handling
-            pass
-
-    def _set_response(self, status_code=200, content_type="text/json"):
-        self.send_response(status_code)
-        self.send_header("Content-type", content_type)
-        self.end_headers()
-
-    def do_POST(self):
         mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -72,6 +65,9 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
 
         response_json = json.loads(response.text)
         mydb.close()
+
+        # route for adding new bookmark (will be used by the extension)
+        
 
 
 # Access the "categories" key 
