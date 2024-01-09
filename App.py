@@ -77,30 +77,30 @@ class App(customtkinter.CTk):
         self.navigation_frame.page5_button.configure(fg_color=("gray75", "gray25") if name == "page5" else "transparent")
         self.navigation_frame.setting_button.configure(fg_color=("gray75", "gray25") if name == "Setting" else "transparent")
 
+        self.page2.grid_remove()
+        self.page3.grid_remove()
+        self.page4.grid_remove()
+        self.page5.grid_remove()
+        self.sett_Page.grid_remove()
         if name == "page2":
             self.page2.grid(row=0, column=1, sticky="nsew")
-        else:
-            self.page2.grid_forget()
+       
 
-        if name == "page3":
+        elif name == "page3":
             self.page3.grid(row=0, column=1, sticky="nsew")
-        else:
-            self.page3.grid_forget()
+      
 
-        if name == "page4":
+        elif name == "page4":
             self.page4.grid(row=0, column=1, sticky="nsew")
-        else:
-            self.page4.grid_forget()
-
-        if name == "page5":
+      
+        elif name == "page5":
             self.page5.grid(row=0, column=1, sticky="nsew")
-        else:
-            self.page5.grid_forget() 
 
-        if name == "Setting":
+
+        elif name == "Setting":
             self.sett_Page.grid(row=0, column=1, sticky="nsew")
-        else:
-            self.sett_Page.grid_forget()        
+  
+        self.update_idletasks()         
 
 
     def login(self):
@@ -116,6 +116,8 @@ class App(customtkinter.CTk):
        self.page5.grid_forget()
        self.sett_Page.grid_forget()
        self.loginPage.grid(row=0, column=1, sticky="nsew")
+       self.update_idletasks()         
+
     
 
     def page2_event(self):

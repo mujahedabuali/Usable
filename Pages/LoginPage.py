@@ -3,6 +3,7 @@ from PIL import Image
 
 class login_page(customtkinter.CTkFrame):
     def __init__(self, parent,login):
+        self.actionLogin = login
         super().__init__(parent, corner_radius=0, fg_color="transparent")
         
         self.logo_image = customtkinter.CTkImage(Image.open("imags/security.png"),size=(40,40))
@@ -17,7 +18,7 @@ class login_page(customtkinter.CTkFrame):
         user_pass= customtkinter.CTkEntry(self,placeholder_text="Password",width=200,show="*") 
         user_pass.pack(pady=20,padx=10) 
 
-        button = customtkinter.CTkButton(self,text='Login',command=login) 
+        button = customtkinter.CTkButton(self,text='Login',command=self.login) 
         button.pack(pady=0,padx=10) 
 
         self.label_phone=customtkinter.CTkLabel(self,text="Forget Password ",cursor="hand2",height=30,font=("TkDefaultFont", 12, "underline"))
@@ -108,23 +109,41 @@ class login_page(customtkinter.CTkFrame):
         submit_button = customtkinter.CTkButton(signUp, text="Submit", command=lambda: self.submit_email(email_entry.get()))
         submit_button.pack(pady=10)         
 
-    def login(): 
+    def login(self): 
+            
+            #if name == password ......
+            self.vertfic("name") 
+           
+       
+     
+    def vertfic(self,name):
+        ver = customtkinter.CTkToplevel(self)
+        ver.title(" Vertfication Page")
+        customtkinter.set_appearance_mode("Dark")
+        ver.geometry("350x250")
+        
+        center_x = int(700)
+        center_y = int(400)
+        ver.geometry(f"+{center_x}+{center_y}")
 
-        username = "1"
-        password = "1"
-        # new_window = ctk.CTkToplevel(app) 
+        mainLabel = customtkinter.CTkLabel(ver,text="  Vertfication Page  ",cursor="hand2",height=30,font=("Times New Roman", 25))
+        mainLabel.pack(pady=10)
+        
+        label1 = customtkinter.CTkLabel(ver, text="Code on you Email:",font=("TkDefaultFont", 16))
+        label1.pack(pady=7)
 
-        # new_window.title("New Window") 
+        email_entry = customtkinter.CTkEntry(ver)
+        email_entry.pack(pady=5)
 
-        # new_window.geometry("350x150") 
+        label2 = customtkinter.CTkLabel(ver, text="*And We check your Mac IP address to verify your identity",font=("TkDefaultFont", 8))
+        label2.pack(pady=10)
 
-        # if user_entry.get() == username and user_pass.get() == password: 
-        #     tkmb.showinfo(title="Login Successful",message="You have logged in Successfully") 
-        #     ctk.CTkLabel(new_window,text="GeeksforGeeks is best for learning ANYTHING !!").pack() 
-        # elif user_entry.get() == username and user_pass.get() != password: 
-        #     tkmb.showwarning(title='Wrong password',message='Please check your password') 
-        # elif user_entry.get() != username and user_pass.get() == password: 
-        #     tkmb.showwarning(title='Wrong username',message='Please check your username') 
-        # else: 
-        #     tkmb.showerror(title="Login Failed",message="Invalid Username and password") 
+
+        def check():
+             ver.destroy()
+             self.actionLogin()
+
+        submit_button = customtkinter.CTkButton(ver, text="Submit", command=check )
+        submit_button.pack(pady=10)         
+
 
