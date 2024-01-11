@@ -6,8 +6,6 @@ import mysql.connector
 
 
 class SimpleRequestHandler(BaseHTTPRequestHandler):
-
-
     def _set_response(self, status_code=200, content_type="text/json"):
         self.send_response(status_code)
         self.send_header("Content-type", content_type)
@@ -39,45 +37,49 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
             self._set_response()
             self.wfile.write(json.dumps({"status": "Success", "message": "Bookmark added successfully"}).encode("utf-8"))
 
-        mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="issa",
-        database="web")
-        mycursor = mydb.cursor()
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length).decode('utf-8')
-        data = json.loads(post_data)
-        mycursor.execute("SELECT url FROM site")
-        mysite = mycursor.fetchall()
-        self._set_response()
-        link=data['link']
-        if(link,) in mysite:
-            print(link)
-            self.wfile.write(json.dumps({"block": True,'why':'this site blocked from admin'}).encode("utf-8"))
-            return
+        if self.path == '/check':
+            mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="issa",
+            database="web")
+            mycursor = mydb.cursor()
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            data = json.loads(post_data)
+            mycursor.execute("SELECT url FROM site")
+            mysite = mycursor.fetchall()
+            self._set_response()
+            link=data['link']
+            mycursor.execute("SELECT realtime_block FROM userdata")
+            blockrealtimedata = mycursor.fetchall()
+            first_item = blockrealtimedata[0]
+            first_attribute_value = first_item[0]
+            blockrealtimedata=False
+            if(first_attribute_value ==1):
+                blockrealtimedata=True
+            if(blockrealtimedata):
+                print("") #Work Here For block malware
+            if(link,) in mysite:
+                self.wfile.write(json.dumps({"block": True,'why':'this site blocked from admin'}).encode("utf-8"))
+                return
 
-        mycursor.execute("SELECT name FROM content")
-        mycontent = mycursor.fetchall()
-        url = f"https://website-categorization.whoisxmlapi.com/api/v3?apiKey=at_KRngxoDlqI3U5RBQMytkwcdirsO58&url={link}"
-                
-        response = requests.request("GET", url)
+            mycursor.execute("SELECT name FROM content")
+            mycontent = mycursor.fetchall()
+            url = f"https://website-categorization.whoisxmlapi.com/api/v3?apiKey=at_KRngxoDlqI3U5RBQMytkwcdirsO58&url={link}"
+                    
+            response = requests.request("GET", url)
 
-        response_json = json.loads(response.text)
-        mydb.close()
-
-        # route for adding new bookmark (will be used by the extension)
-        
+            response_json = json.loads(response.text)
+            mydb.close()
 
 
-# Access the "categories" key 
-        clas = response_json["categories"][0]["name"] 
-        if (clas,) in mycontent:
-            print(link)
-            self.wfile.write(json.dumps({"block": True,'why':f'{clas} sites blocked from admin'}).encode("utf-8"))
-            return
-        
-        self.wfile.write(json.dumps({"block": False}).encode("utf-8"))
+            clas = response_json["categories"][0]["name"] 
+            if (clas,) in mycontent:
+                self.wfile.write(json.dumps({"block": True,'why':f'{clas} sites blocked from admin'}).encode("utf-8"))
+                return
+            
+            self.wfile.write(json.dumps({"block": False}).encode("utf-8"))
 
 def run(server_class=HTTPServer, handler_class=SimpleRequestHandler, port=8000):
     server_address = ('', port)
