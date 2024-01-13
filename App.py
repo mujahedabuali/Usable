@@ -67,7 +67,7 @@ class App(customtkinter.CTk):
         self.page3 = page3(self)#book mark
         self.page4 = page4(self)#book mark
         self.page5 = page5(self)#Block site
-        self.sett_Page= Setting_Page(self)#Setting Page
+        self.sett_Page= Setting_Page(self,self.loginPage)#Setting Page
 
 
     def select_frame_by_name(self, name):
