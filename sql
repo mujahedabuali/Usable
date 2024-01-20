@@ -28,3 +28,8 @@ ALTER TABLE bookmark
 ADD username  VARCHAR(255) ;
 ALTER TABLE bookmark
 ADD FOREIGN KEY ( username ) REFERENCES userdata(username);
+
+create Table lastuser(
+id int primary key,
+username varchar(250) 
+);
