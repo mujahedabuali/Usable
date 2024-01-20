@@ -11,3 +11,20 @@ name VARCHAR(60),
 url VARCHAR(255)
 );
 
+
+ALTER TABLE content
+ADD username  VARCHAR(255) ;
+ALTER TABLE userdata
+ADD INDEX idx_username (username);
+ALTER TABLE content
+ADD FOREIGN KEY ( username ) REFERENCES userdata(username);
+
+ALTER TABLE site
+ADD username  VARCHAR(255) ;
+ALTER TABLE site
+ADD FOREIGN KEY ( username ) REFERENCES userdata(username);
+
+ALTER TABLE bookmark
+ADD username  VARCHAR(255) ;
+ALTER TABLE bookmark
+ADD FOREIGN KEY ( username ) REFERENCES userdata(username);
