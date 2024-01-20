@@ -33,3 +33,5 @@ create Table lastuser(
 id int primary key,
 username varchar(250) 
 );
+
+insert into lastuser(id,username) value(1,"")
