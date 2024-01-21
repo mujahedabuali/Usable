@@ -63,10 +63,9 @@ class App(customtkinter.CTk):
 
         self.navigation_frame = menuFrame(self, self.page2_event, self.page3_event, self.page4_event,self.page5_event,self.setting_event,self.logout)
         
-        self.page2 = page2(self)#web filter
-        self.page3 = page3(self)#book mark
+
+
         self.page4 = page4(self)#book mark
-        self.page5 = page5(self)#Block site
         self.sett_Page= Setting_Page(self,self.loginPage)#Setting Page
 
 
@@ -105,6 +104,9 @@ class App(customtkinter.CTk):
 
     def login(self):
        self.navigation_frame.grid(row=0, column=0, sticky="nsew")
+       self.page2 = page2(self,self.loginPage)#web filter
+       self.page3 = page3(self,self.loginPage)#book mark
+       self.page5 = page5(self,self.loginPage)#Block site
        self.select_frame_by_name("page5")
        self.loginPage.grid_forget()
 
