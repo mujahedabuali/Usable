@@ -12,36 +12,39 @@ class page2(ck.CTkFrame):
         self.checkbox_vars[checkbox_number].set( current_state)
         if checkbox_number==0:
             if(current_state):
-                sql = "INSERT INTO content (name) VALUES ('Social Networking');"
-                mycursor.execute(sql)
+                sql = "INSERT INTO content (name,username) VALUES ('Social Networking',%s);"
+                mycursor.execute(sql,(self.entered_username,))
             else:
-                sql = "DELETE FROM content WHERE name = 'Social Networking'"
-                mycursor.execute(sql)
+                sql = "DELETE FROM content WHERE name = 'Social Networking' and username=%s"
+                mycursor.execute(sql,(self.entered_username,))
         elif checkbox_number==2:
             if(current_state):
-                sql = "INSERT INTO content (name) VALUES ('Adult and Pornography');"
-                mycursor.execute(sql)
+                sql = "INSERT INTO content (name,username) VALUES ('Adult and Pornography',%s);"
+                mycursor.execute(sql,(self.entered_username,))
             else:
-                sql = "DELETE FROM content WHERE name = 'Adult and Pornography'"
-                mycursor.execute(sql)
+                sql = "DELETE FROM content WHERE name = 'Adult and Pornography' and username=%s"
+                mycursor.execute(sql,(self.entered_username,))
         elif checkbox_number==1:
             if(current_state):
-                sql = "INSERT INTO content (name) VALUES ('Streaming Media');"
-                mycursor.execute(sql)
+                sql = "INSERT INTO content (name,username) VALUES ('Streaming Media',%s);"
+                mycursor.execute(sql,(self.entered_username,))
             else:
-                sql = "DELETE FROM content WHERE name = 'Streaming Media'"
-                mycursor.execute(sql)
+                sql = "DELETE FROM content WHERE name = 'Streaming Media' and username=%s"
+                mycursor.execute(sql,(self.entered_username,))
         elif checkbox_number==3:
             if(current_state):
-                sql = "INSERT INTO content (name) VALUES ('Games');"
-                mycursor.execute(sql)
+                sql = "INSERT INTO content (name,username) VALUES ('Games',%s);"
+                mycursor.execute(sql,(self.entered_username,))
             else:
-                sql = "DELETE FROM content WHERE name = 'Games'"
-                mycursor.execute(sql)
+                sql = "DELETE FROM content WHERE name = 'Games' and username=%s"
+                mycursor.execute(sql,(self.entered_username,))
         mydb.commit()    
 
-    def __init__(self, parent):
-        mycursor.execute("SELECT name FROM content")
+    def __init__(self, parent,login_page_instance):
+        self.login_page_instance = login_page_instance
+        self.entered_username = self.login_page_instance.get_entered_username()
+
+        mycursor.execute("SELECT name FROM content WHERE username = %s", (self.entered_username,))
         mycontent = mycursor.fetchall()
         self.checkbox_vars = [ck.BooleanVar() for _ in range(5)]
         for x in mycontent:
