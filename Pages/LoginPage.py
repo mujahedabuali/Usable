@@ -8,7 +8,6 @@ import random
 import string
 import uuid
 
-
 class login_page(customtkinter.CTkFrame):
     
     def __init__(self, parent,login):
@@ -42,7 +41,7 @@ class login_page(customtkinter.CTkFrame):
 
 
         self.label_SignUP=customtkinter.CTkLabel(self,text="    SIGN UP   ",cursor="hand2",image=self.signUp_image,compound="right",height=30,font=("TkDefaultFont", 22, "underline"))
-        self.label_SignUP.pack(pady=150)
+        self.label_SignUP.pack(pady=10)
 
         self.label_SignUP.bind("<Button-1>", self.signUp)
         self.label_phone.bind("<Button-1>", self.open_forgot_password_window)
@@ -152,19 +151,19 @@ class login_page(customtkinter.CTkFrame):
         submit_button.pack(pady=10)         
 
     def login(self): 
-        print(self.get_mac_address())
+        # print(self.get_mac_address())
         entered_username = self.user_entry.get()
         entered_password = hashlib.sha256(self.user_pass.get().encode()).hexdigest()
         mycursor.execute("SELECT * FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
         result = mycursor.fetchone()
         mycursor.execute("SELECT email FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
         result1 = mycursor.fetchone()
-        mycursor.execute("SELECT macAddress FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
-        mac_address_tuple = mycursor.fetchone()
+        # mycursor.execute("SELECT macAddress FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
+        # mac_address_tuple = mycursor.fetchone()
 
-        stored_mac_address = mac_address_tuple[0]
-        entered_mac_address = self.get_mac_address()
-        print(stored_mac_address)
+        # stored_mac_address = mac_address_tuple[0]
+        # entered_mac_address = self.get_mac_address()
+        # print(stored_mac_address)
 
         # if stored_mac_address == entered_mac_address :
         if result and result1:
@@ -172,7 +171,7 @@ class login_page(customtkinter.CTkFrame):
                 target_username = "entered_username"
                 email = result1[0]
                 verification_code = self.send_verification_code(email)  
-                self.vertfic(verification_code)
+                self.vertfic(verification_code,entered_username)
 
          
         else:
@@ -182,7 +181,7 @@ class login_page(customtkinter.CTkFrame):
 
        
      
-    def vertfic(self,verification_code):
+    def vertfic(self,verification_code,entered_username):
         ver = customtkinter.CTkToplevel(self)
         ver.title(" Vertfication Page")
         customtkinter.set_appearance_mode("Dark")
@@ -209,6 +208,11 @@ class login_page(customtkinter.CTkFrame):
             entered_code = email_entry.get()
 
             if entered_code == verification_code:
+                # Update the username in the lastuser table
+                mycursor.execute("UPDATE lastuser SET username = %s WHERE id = 1", (entered_username,))
+
+                # Commit the changes
+                mydb.commit()
                 ver.destroy()
                 self.actionLogin()
             else:
