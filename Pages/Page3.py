@@ -6,9 +6,13 @@ from db import mycursor,mydb
 
 
 class page3(ck.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent,login_page_instance):
         super().__init__(parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=10)
+
+        self.login_page_instance = login_page_instance
+        self.entered_username = self.login_page_instance.get_entered_username()
+        # print(entered_username)
 
         self.bookmark_image = ck.CTkImage(Image.open("imags/bookmark.png"),size=(30,30))
         self.label = ck.CTkLabel(self, text=" Book Mark",image=self.bookmark_image,corner_radius=20,compound="left",height=50,font=ck.CTkFont(family="Times New Roman", size=25,weight="bold")) 
@@ -49,7 +53,7 @@ class page3(ck.CTkFrame):
         self.delete_button = ck.CTkButton(button_frame, text="Delete a Book Mark", command=self.delete_item)
         self.delete_button.place(x=600,y=100)
 
-        mycursor.execute("SELECT url , name FROM bookmark")
+        mycursor.execute("SELECT url , name FROM bookmark WHERE username = %s", (self.entered_username,))
         mybookmark = mycursor.fetchall()
         for bookmark in mybookmark:
             self.table.insert('','end',values=(bookmark))
@@ -62,14 +66,14 @@ class page3(ck.CTkFrame):
             if (self.entry.get() and self.entry2) :
                 data = self.entry.get()
                 data2 = self.entry2.get()
-                mycursor.execute("SELECT name FROM bookmark")
+                mycursor.execute("SELECT name FROM bookmark WHERE username = %s", (self.entered_username,))
                 mysite = mycursor.fetchall()
                 if (data2,) in mysite:
                     CTkMessagebox(title="Warning Message",message="This Url is already blocked",icon="warning",fade_in_duration=5)
                     return
                 else:
-                    sql = "INSERT INTO bookmark (name , url) VALUES (%s,%s)"
-                    mycursor.execute(sql, (data2,data))
+                    sql = "INSERT INTO bookmark (name , url , username) VALUES (%s,%s,%s)"
+                    mycursor.execute(sql, (data2,data,self.entered_username))
                     mydb.commit()
 
 
@@ -113,15 +117,15 @@ class page3(ck.CTkFrame):
         oldurl = values[0]
         oldname = values[1]
         def get():
-            mycursor.execute("SELECT name FROM bookmark")
+            mycursor.execute("SELECT name FROM bookmark WHERE username = %s", (self.entered_username,))
             mysite = mycursor.fetchall()
             data = self.entry.get()
             data2 = self.entry2.get()
             if (data2,) in mysite:
                     CTkMessagebox(title="Warning Message",message="This Url is already blocked",icon="warning",fade_in_duration=5)
             else:
-                update_query = "UPDATE bookmark SET name = %s, url = %s WHERE name = %s;"
-                mycursor.execute(update_query, (data2, data ,oldname ))
+                update_query = "UPDATE bookmark SET name = %s, url = %s WHERE name = %s and username=%s;"
+                mycursor.execute(update_query, (data2, data ,oldname,self.entered_username ))
                 mydb.commit()
                 self.table.item(item, values=(data,data2))
                 self.entry.delete(0,'end')
@@ -155,9 +159,9 @@ class page3(ck.CTkFrame):
          selected_item = self.table.focus()
          if selected_item:
             values = self.table.item(selected_item, "values")
-            oldname = values[0]
-            sql = "DELETE FROM  bookmark  WHERE name = %s"
-            mycursor.execute(sql, (oldname,))
+            oldname = values[1]
+            sql = "DELETE FROM  bookmark  WHERE name = %s and username=%s"
+            mycursor.execute(sql, (oldname,self.entered_username))
             mydb.commit() 
             self.table.delete(selected_item)
          else:  CTkMessagebox(title="Warning Message",message="Select a URL Please",icon="warning",fade_in_duration=5)   
