@@ -8,9 +8,12 @@ from db import mycursor,mydb
 
 
 class page5(ck.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent,login_page_instance):
         super().__init__(parent, corner_radius=0, fg_color="transparent")
         self.grid_columnconfigure(0, weight=10)
+
+        self.login_page_instance = login_page_instance
+
 
         self.block_image = ck.CTkImage(Image.open("imags/ad.png"),size=(30,30))
         self.label = ck.CTkLabel(self, text=" Block Site",corner_radius=20,height=50,image=self.block_image,compound="left",font=ck.CTkFont(family="Times New Roman", size=25,weight="bold")) 
@@ -48,7 +51,8 @@ class page5(ck.CTkFrame):
 
         self.delete_button = ck.CTkButton(button_frame, text="Delete a Block Site", command=self.delete_item)
         self.delete_button.place(x=600,y=100)
-        mycursor.execute("SELECT url FROM site")
+        self.entered_username = self.login_page_instance.get_entered_username()
+        mycursor.execute("SELECT url FROM site WHERE username = %s", (self.entered_username,))
         mysite = mycursor.fetchall()
         for site in mysite:
             self.table.insert('','end',values=(site))
@@ -60,15 +64,15 @@ class page5(ck.CTkFrame):
     def add_window(self):
 
         def get():
-            mycursor.execute("SELECT url FROM site")
+            mycursor.execute("SELECT url FROM site WHERE username = %s", (self.entered_username,))
             mysite = mycursor.fetchall()
             if (self.entry.get()) :
                 data = self.entry.get()
                 if (data,) in mysite:
                     CTkMessagebox(title="Warning Message",message="This Url is already blocked",icon="warning",fade_in_duration=5)
                 else:
-                    sql = "INSERT INTO site (url) VALUES (%s)"
-                    mycursor.execute(sql, (data,))
+                    sql = "INSERT INTO site (url,username) VALUES (%s,%s)"
+                    mycursor.execute(sql, (data,self.entered_username))
                     mydb.commit()    
                     self.table.insert('','end',values=(data))
                     self.entry.delete(0,'end')
@@ -101,7 +105,7 @@ class page5(ck.CTkFrame):
     def edit_window(self):
         def get():
             if (self.entry.get()) :
-                mycursor.execute("SELECT url FROM site")
+                mycursor.execute("SELECT url FROM site WHERE username = %s", (self.entered_username,))
                 mysite = mycursor.fetchall()
                 if (self.entry.get()) :
                     data = self.entry.get()
@@ -112,8 +116,8 @@ class page5(ck.CTkFrame):
                         values = self.table.item(item, "values")
                         oldurl = values[0]
                         data = self.entry.get()
-                        sql = "UPDATE site SET url = %s WHERE url = %s"
-                        mycursor.execute(sql, (data, oldurl))
+                        sql = "UPDATE site SET url = %s WHERE url = %s and username=%s"
+                        mycursor.execute(sql, (data, oldurl,self.entered_username))
                         mydb.commit() 
                         self.table.item(item, values=data)
                         self.entry.delete(0,'end')
@@ -141,8 +145,8 @@ class page5(ck.CTkFrame):
          if selected_item:
             values = self.table.item(selected_item, "values")
             oldurl = values[0]
-            sql = "DELETE FROM  site  WHERE url = %s"
-            mycursor.execute(sql, (oldurl,))
+            sql = "DELETE FROM  site  WHERE url = %s and username=%s"
+            mycursor.execute(sql, (oldurl,self.entered_username))
             mydb.commit() 
             self.table.delete(selected_item)
          else:  CTkMessagebox(title="Warning Message",message="Select a item Please",icon="warning",fade_in_duration=5)
