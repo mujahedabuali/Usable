@@ -12,7 +12,9 @@
     "permissions": [
         "scripting",
         "webRequest",
-        "webNavigation"
+        "webNavigation",
+        "storage",
+        "activeTab"
     ],
     "host_permissions": [
         "http://*/*",

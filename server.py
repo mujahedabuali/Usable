@@ -59,7 +59,23 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
             if(first_attribute_value ==1):
                 blockrealtimedata=True
             if(blockrealtimedata):
-                print("") #Work Here For block malware
+                apiKey = 'AIzaSyD_sBfydgE1kbg5y1xAPKJFRXZB8hH4fQc'
+                api_url = f'https://safebrowsing.googleapis.com/v4/threatMatches:find?key={apiKey}'
+                threat_info = {
+                    'client': {'clientId': 'SafeWebNavigation', 'clientVersion': '1.0.0'},
+                    'threatInfo': {
+                        'threatTypes': ['MALWARE', 'SOCIAL_ENGINEERING','UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
+                        'platformTypes': ['ANY_PLATFORM'],
+                        'threatEntryTypes': ['URL'],
+                        'threatEntries': [{'url': link}]
+                    }
+                }
+                response = requests.post(api_url, json=threat_info)
+                if response.ok:
+                    data = response.json()
+                    if 'matches' in data:
+                        self.wfile.write(json.dumps({"block": True, 'why': f'this site blocked because of {data.get('matches')[0].get('threatType')}'}).encode("utf-8"))
+                        return
             if(link,) in mysite:
                 self.wfile.write(json.dumps({"block": True,'why':'this site blocked from admin'}).encode("utf-8"))
                 return

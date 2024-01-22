@@ -13,6 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const siteURL = document.getElementById('site-url');
     siteURL.classList.add('site-url');
 
-    causeText.innerHTML = `Cause of blocking: potential ${cause}`
+    causeText.innerHTML = `Cause of blocking: ${cause}`
 
 });

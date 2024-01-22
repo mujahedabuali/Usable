@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
     <title>Safe web navigation</title>
 </head>
 
@@ -21,6 +21,42 @@
         <button id="add_bookmark">Bookmark this website</button>
     </div>
 
+    <div class="check_website_container">
+        <button id="check_website">Check website Trustworthiness</button>
+    </div>
+
+    <div class="loader-container">
+        <div class="dot-spinner">
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+        </div>
+    </div>
+
+
+    <div class="test">
+        <div class="gauge" id="gauge">
+            <div class="gauge-body">
+                <div class="fill" id="fill"></div>
+                <div class="cover" id="cover">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="error-container" id="errorIndecator">
+        <h2 class="error-indecator">Error while evaluating website. please try again</h2>
+    </div>
+
+    <div class="details" id="details">
+        <a id="meaning">What does this mean?</a>
+        <br>
+        <a id="techDetails">Technical details</a>
+    </div>
 
     <script src="index.js"></script>
 </body>
