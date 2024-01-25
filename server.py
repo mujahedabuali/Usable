@@ -82,7 +82,8 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
 
             mycursor.execute("SELECT name FROM content")
             mycontent = mycursor.fetchall()
-            url = f"https://website-categorization.whoisxmlapi.com/api/v3?apiKey=at_KRngxoDlqI3U5RBQMytkwcdirsO58&url={link}"
+            url = f"https://website-categorization.whoisxmlapi.com/api/v3?apiKey=at_JzDY9mrdoi3JGHRrU3BwQh4XjoutW&url={link}"
+
                     
             response = requests.request("GET", url)
 
