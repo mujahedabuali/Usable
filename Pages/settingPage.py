@@ -16,6 +16,7 @@ class Setting_Page(ck.CTkFrame):
         self.login_page_instance = login_page_instance
 
 
+
         self.setting_image = ck.CTkImage(Image.open("imags/settings.png"),size=(30,30))
         self.label = ck.CTkLabel(self, text=" Settings",corner_radius=20,height=50,image=self.setting_image,compound="left",font=ck.CTkFont(family="Times New Roman", size=25,weight="bold")) 
         self.label.place(x=410,y=15)
@@ -48,6 +49,8 @@ class Setting_Page(ck.CTkFrame):
          # Save button
         save_button = ck.CTkButton(self, text="Save Changes", command=self.save_changes)
         save_button.place(x=420,y=500)
+        # self.load_user_data()
+
 
     def save_changes(self):
         entered_username = self.login_page_instance.get_entered_username()
@@ -86,6 +89,19 @@ class Setting_Page(ck.CTkFrame):
         CTkMessagebox(title="Successful Message",message="Successfully changed!",icon="info",fade_in_duration=5)
 
         mydb.commit()
+
+    # def load_user_data(self):
+    #     # Fetch user data from the 'userdata' table based on the logged-in user's username
+    #     user_name = self.login_page_instance.get_entered_username()
+    #     print(user_name)
+    #     select_query = "SELECT email, phonenumber FROM userdata WHERE username = %s"
+
+    #     mycursor.execute(select_query, (user_name,))
+    #     user_data = mycursor.fetchone()
+
+    #     if user_data:
+    #         self.email_entry.set(user_data[0])  # Index 0 corresponds to email in the query
+    #         self.phone_entry.set(user_data[1])  # Index 1 corresponds to phonenumber in the query
 
         
     
