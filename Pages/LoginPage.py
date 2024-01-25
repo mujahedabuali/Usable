@@ -151,21 +151,13 @@ class login_page(customtkinter.CTkFrame):
         submit_button.pack(pady=10)         
 
     def login(self): 
-        # print(self.get_mac_address())
         entered_username = self.user_entry.get()
         entered_password = hashlib.sha256(self.user_pass.get().encode()).hexdigest()
         mycursor.execute("SELECT * FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
         result = mycursor.fetchone()
         mycursor.execute("SELECT email FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
         result1 = mycursor.fetchone()
-        # mycursor.execute("SELECT macAddress FROM userdata WHERE username = %s AND password = %s", (entered_username, entered_password))
-        # mac_address_tuple = mycursor.fetchone()
-
-        # stored_mac_address = mac_address_tuple[0]
-        # entered_mac_address = self.get_mac_address()
-        # print(stored_mac_address)
-
-        # if stored_mac_address == entered_mac_address :
+        
         if result and result1:
                 self.label_message.configure(text="")
                 target_username = "entered_username"
@@ -176,8 +168,7 @@ class login_page(customtkinter.CTkFrame):
          
         else:
                 self.label_message.configure(text="Invalid Username or Password")
-        # else:
-        #     self.label_message.configure(text="Invalid macAdress")
+       
 
        
      
@@ -282,13 +273,13 @@ class login_page(customtkinter.CTkFrame):
         smtp_username = "adhamturki321@gmail.com"
         smtp_password = "hzaimilhhzljcgvn"
 
-        # Create a message
+        # Creating a message
         message = MIMEText(body)
         message["Subject"] = subject
         message["From"] = sender_email
         message["To"] = receiver_email
 
-        # Connect to the SMTP server and send the email
+        # Connect to the SMTP server to send the email
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(smtp_username, smtp_password)
@@ -300,11 +291,4 @@ class login_page(customtkinter.CTkFrame):
 
     def get_entered_username(self):
         return self.user_entry.get()
-    def get_mac_address(self):
-        # Get the MAC address of the first network interface
-        try:
-            mac_address = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(5, -1, -1)])
-            return mac_address
-        except Exception as e:
-            print(f"Error obtaining MAC address: {e}")
-            return None
+   
