@@ -43,3 +43,6 @@ insert into lastuser(id,username) value(1,"")
     username varchar(250),
 	FOREIGN KEY ( username ) REFERENCES userdata(username)
     );
+
+ALTER TABLE userdata
+ADD  pattren varchar(250);
