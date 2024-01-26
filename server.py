@@ -27,9 +27,11 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
             database="web")
 
             mycursor = db.cursor()
+            mycursor.execute("select username from lastuser where id=1")
+            myuser = mycursor.fetchone()
 
-            sql = "INSERT INTO bookmark (name, url) VALUES (%s, %s)"
-            val = (name, url)
+            sql = "INSERT INTO bookmark (name, url,username) VALUES (%s, %s,%s)"
+            val = (name, url,myuser[0])
     
             mycursor.execute(sql, val)
             db.commit()
@@ -74,7 +76,7 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
                 if response.ok:
                     data = response.json()
                     if 'matches' in data:
-                        self.wfile.write(json.dumps({"block": True, 'why': f'this site blocked because of {data.get('matches')[0].get('threatType')}'}).encode("utf-8"))
+                        self.wfile.write(json.dumps({"block": True, 'why': f"this site blocked because of {data.get('matches')[0].get('threatType')}"}).encode("utf-8"))
                         return
             if(link,) in mysite:
                 self.wfile.write(json.dumps({"block": True,'why':'this site blocked from admin'}).encode("utf-8"))
@@ -83,7 +85,6 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
             mycursor.execute("SELECT name FROM content")
             mycontent = mycursor.fetchall()
             url = f"https://website-categorization.whoisxmlapi.com/api/v3?apiKey=at_JzDY9mrdoi3JGHRrU3BwQh4XjoutW&url={link}"
-
                     
             response = requests.request("GET", url)
 
