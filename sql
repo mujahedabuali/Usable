@@ -46,3 +46,6 @@ insert into lastuser(id,username) value(1,"")
 
 ALTER TABLE userdata
 ADD  pattren varchar(250);
+
+ALTER TABLE bookmark
+MODIFY name  VARCHAR(255) ;
