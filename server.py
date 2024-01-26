@@ -49,10 +49,10 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
             data = json.loads(post_data)
-            mycursor.execute("SELECT url FROM site")
+            link=data['link']
+            mycursor.execute("SELECT url FROM site ")
             mysite = mycursor.fetchall()
             self._set_response()
-            link=data['link']
             mycursor.execute("SELECT realtime_block FROM userdata")
             blockrealtimedata = mycursor.fetchall()
             first_item = blockrealtimedata[0]
@@ -78,9 +78,12 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
                     if 'matches' in data:
                         self.wfile.write(json.dumps({"block": True, 'why': f"this site blocked because of {data.get('matches')[0].get('threatType')}"}).encode("utf-8"))
                         return
-            if(link,) in mysite:
-                self.wfile.write(json.dumps({"block": True,'why':'this site blocked from admin'}).encode("utf-8"))
-                return
+            print(mysite)
+            for site_tuple in mysite:
+                site = site_tuple[0]  # Extract the string from the tuple
+                if site in link:
+                    self.wfile.write(json.dumps({"block": True,'why':'this site blocked from admin'}).encode("utf-8"))
+                    return
 
             mycursor.execute("SELECT name FROM content")
             mycontent = mycursor.fetchall()
