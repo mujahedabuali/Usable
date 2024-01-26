@@ -9,53 +9,70 @@
 </head>
 
 <body>
+
     <div class="title">
         <img src="assets/images/ad.png" alt="Logo">
         <h1>Safe web navigation</h1>
     </div>
-
     <hr>
 
+    <div class="login-container">
 
-    <div class="add_bookmark_container">
-        <button id="add_bookmark">Bookmark this website</button>
-    </div>
+        <h1>Login</h1>
 
-    <div class="check_website_container">
-        <button id="check_website">Check website Trustworthiness</button>
-    </div>
-
-    <div class="loader-container">
-        <div class="dot-spinner">
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
-            <div class="dot-spinner__dot"></div>
+        <div id="loginForm">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button id="submit">Login</button>
         </div>
     </div>
 
 
-    <div class="test">
-        <div class="gauge" id="gauge">
-            <div class="gauge-body">
-                <div class="fill" id="fill"></div>
-                <div class="cover" id="cover">0%</div>
+    <div class="main-container">
+
+        <div class="add_bookmark_container">
+            <button id="add_bookmark">Bookmark this website</button>
+        </div>
+
+        <div class="check_website_container">
+            <button id="check_website">Check website Trustworthiness</button>
+        </div>
+
+        <div class="loader-container">
+            <div class="dot-spinner">
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
             </div>
         </div>
-    </div>
 
-    <div class="error-container" id="errorIndecator">
-        <h2 class="error-indecator">Error while evaluating website. please try again</h2>
-    </div>
 
-    <div class="details" id="details">
-        <a id="meaning">What does this mean?</a>
-        <br>
-        <a id="techDetails">Technical details</a>
+        <div class="test">
+            <div class="gauge" id="gauge">
+                <div class="gauge-body">
+                    <div class="fill" id="fill"></div>
+                    <div class="cover" id="cover">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-container" id="errorIndecator">
+            <h2 class="error-indecator">Error while evaluating website. please try again</h2>
+        </div>
+
+        <div class="details" id="details">
+            <a id="meaning">What does this mean?</a>
+            <br>
+            <a id="techDetails">Technical details</a>
+        </div>
+
+        <div class="logout-container"><button id="logoutButton">Logout</button></div>
+
     </div>
 
     <script src="index.js"></script>

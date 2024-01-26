@@ -9,6 +9,31 @@ const details = document.getElementById('details')
 const meaning = document.getElementById('meaning')
 const techDetails = document.getElementById('techDetails')
 const loaderContainer = document.getElementsByClassName('loader-container')[0]
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const submitButton = document.getElementById('submit');
+const mainContainer = document.getElementsByClassName('main-container')[0]
+const loginContainer = document.getElementsByClassName('login-container')[0]
+const logoutButton = document.getElementById('logoutButton')
+
+document.addEventListener('DOMContentLoaded', function () {
+    chrome.storage.local.get(['sessionKey'], function (result) {
+        const sessionKey = result.sessionKey;
+
+        if (sessionKey) {
+            mainContainer.style.display = 'block'
+            loginContainer.style.display = 'none'
+        }
+    });
+});
+
+logoutButton.addEventListener('click', function () {
+    chrome.storage.local.remove('sessionKey', function () {
+        console.log('Logout');
+        chrome.runtime.reload();
+    });
+})
+
 
 addBookmark.addEventListener('click', function () {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -52,7 +77,7 @@ function checkTrustworthiness(domainName) {
     let isExpiredSSL = true
     let age
 
-    const apiKey = 'at_arxsLYEgerMhj94aPRol5sdV2rvak'
+    const apiKey = 'at_1rz2ZoDfaViZzJiYfqyUhNme09x6J'
     let apiUrl = 'https://domain-reputation.whoisxmlapi.com/api/v2'
     let fullUrl = `${apiUrl}?apiKey=${apiKey}&domainName=${domainName}&mode=full&outputFormat=JSON`
 
@@ -245,30 +270,36 @@ function extractDomainName(url) {
 
 function sendDataToBackend(url, title) {
     const backendUrl = 'http://localhost:8000/add_bookmark'
-    const data = {
-        name: title,
-        url: url
-    }
+    chrome.storage.local.get(['sessionKey'], function (result) {
+        const sessionKey = result.sessionKey
 
-    fetch(backendUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Network response was not OK');
+        const data = {
+            name: title,
+            url: url,
+            sessionID: sessionKey
+        }
+
+        fetch(backendUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
-        .then(result => {
-            console.log('Bookmark added:', result);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not OK');
+            })
+            .then(result => {
+                console.log('Bookmark added:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
 }
 
 function setGaugeFill(value) {
@@ -285,3 +316,50 @@ function setGaugeFill(value) {
         gaugeCover.style.color = '#e00000'
     }
 }
+
+// login code
+
+
+submitButton.addEventListener('click', function () {
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+    console.log(username + '  ' + password);
+
+    fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    })
+        .then(response => {
+            if (response.ok) {
+                // Return the parsed JSON from the response
+                return response.json();
+            } else {
+                if (response.status == 401) {
+                    window.alert('Username or password is not correct!')
+                    return
+                }
+            }
+        })
+        .then(result => {
+            if (result.message == 'Login successful') {
+                mainContainer.style.display = 'block'
+                loginContainer.style.display = 'none'
+                const sessionKey = result.session_id
+                console.log(sessionKey + 'index.js')  // Replace this with the actual session key
+                chrome.runtime.sendMessage({ action: "setSessionKey", sessionKey: sessionKey });
+            } else {
+
+            }
+
+        })
+        .catch(error => {
+            // Handle any errors that occurred during the fetch
+            console.error('Error:', error);
+        });
+});
