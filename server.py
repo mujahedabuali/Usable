@@ -17,6 +17,9 @@ class SimpleRequestHandler(BaseHTTPRequestHandler):
         return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
 
     def do_POST(self):
+        mycursor.execute("select username from lastuser where id=1")
+        myuser = mycursor.fetchone()
+        username = myuser[0]
         if self.path == '/login':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode('utf-8')
